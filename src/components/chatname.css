@@ -1,0 +1,14 @@
+.name{
+    color: #e9edef;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 15px;
+    border-bottom:solid 0.1px rgba(255,255,255,0.3);
+    margin: 0;
+}
+
+.name-container{
+    cursor: pointer;
+    background-color: rgba(0,0,0,0);
+}
+

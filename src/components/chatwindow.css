@@ -1,0 +1,78 @@
+.name2{
+    color: #e9edef;
+    font-size: 17px;
+    font-weight: 500;
+    padding-left: 15px;
+    
+    margin: 0;
+}
+
+.msg-window{
+    background-image: url( 'https://wallpapercave.com/wp/wp6988787.png');
+    flex:1 1 auto;
+    background-repeat: repeat;
+    background-size:contain;
+    overflow-y: scroll;
+    
+}
+
+.msg-window::-webkit-scrollbar{
+    display: none;
+}
+
+.msg-input{
+    height: 8dvh;
+    background-color:rgb(32 44 51); ;
+}
+
+.input{
+    flex: 1;
+}
+
+.input>input{
+    height: 6dvh;
+    background-color: rgb(42 57 66); 
+    border: none;
+    border-radius: 7px;
+    color: white;
+}
+
+
+.input>input:focus{
+    border: none;
+    margin: none;
+    outline: none;
+}
+
+.send-icon>img{
+    height: 5dvh;
+    cursor: pointer;
+}
+
+.message{
+    padding: 12px;
+    width: fit-content;
+    max-width: 70%;
+    min-width: 70px;
+    font-size: 18px;
+    border-radius: 10px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.sender{
+    margin-left: auto;
+    margin-right: 20px;
+    background-color: #176b5b;
+
+}
+
+.received{
+    margin-left: 20px;
+    background-color: rgb(32 44 51);
+}
+
+.tick-mark{
+    height: 15px;
+    width: 20px;
+}
