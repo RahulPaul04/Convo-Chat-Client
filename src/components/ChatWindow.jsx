@@ -6,12 +6,18 @@ import {v4 as uuidv4} from 'uuid'
 import deliverdtick from '../images/New Text Document5.png'
 import singletick from '../images/singletick.png'
 import bluetick from '../images/New Text Document (2).png'
+import dropdown from '../images/Dropdown.png'
+import cancel from '../images/cancel (1).png'
 
 function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, setmessagehashs, chatuserstatus,setchatuserstatus,profilephoto}) {
 
     console.log("name in chatwondow",name);
     const [message,setmessage] = useState("")
     const [recpid,setrecpid] = useState(id)
+    const [dropdownindex,setdropdownindex] = useState(null)
+    const [editwindow,seteditwindow] = useState(false)
+    const [editmsg,seteditmsg] = useState("")
+    const [editmessage,seteditmessage] = useState("")
     
     
     console.log("messagearray",messageArray);
@@ -55,6 +61,8 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
         }
     }
 
+    
+
     //Will send Seen Ack for all the messages disaplayed to user
     useEffect(() => {
         if(recipientackarray.length > 0){
@@ -78,9 +86,82 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
 
     console.log(chatuserstatus[id],"chatuserstatus",chatuserstatus);
 
-    
+    const toogleDropDown = (index) =>{
+        if(dropdownindex == index){
+            setdropdownindex(null)
+        }
+        else{
+            setdropdownindex(index)
+        }
+    }
+
+    const updatemsg = (msg) => {
+        setdropdownindex(null)
+        seteditmsg(msg.content)
+        setmessage(msg.content)
+        seteditwindow(true)
+        seteditmessage(msg)
+    }
+
+    const deletemsg = (msg) => {
+        setdropdownindex(null)
+        socket.emit("deletemsg",msg)
+        let msgarr = [...messageArray]
+        let msgid = msg._id
+        let msgindex = messagehashs[msgid]
+        let message = msgarr[msgindex]
+        message.content = "This Message has been deleted"
+        message.deleted = true
+        setmessageArray([...msgarr])
+    }
+
+    const canceledit = () => {
+        seteditmsg("")
+        seteditwindow(false)
+        setmessage("")
+
+    }
+
+    const sendedit = () => {
+        socket.emit("editmsg",message,editmessage)
+        seteditmessage("")
+        setmessage("")
+        seteditwindow(false)
+        seteditmsg("")
+        let msgarr = [...messageArray]
+        let msgid = editmessage._id
+        let msgindex = messagehashs[msgid]
+        let msg = msgarr[msgindex]
+        msg.content = message
+        msg.edited = true
+        setmessageArray([...msgarr])
+    }
+
   return (
     <div className='w-100 d-flex flex-column' style={{height:'100vh'}}>
+        {editwindow && <div className='editwindow d-flex flex-column align-items-center justify-content-center'>
+        <div className='w-50'style={{backgroundImage:'background-image: url( "https://wallpapercave.com/wp/wp6988787.png")'}} >
+                <div onClick={canceledit} className='canceledit mb-4' style={{marginLeft:'auto',marginRight:'20px',width: 'fit-content',cursor:'pointer'}}>
+                    <img src={cancel} alt="" />
+                </div>
+                <div className="prevmsg message sender">
+                    
+                            
+        
+                    <p style={{marginBottom:'0'}}>{editmsg}</p>
+    
+                </div >
+                <div className="w-100 msg-input d-flex  align-items-center rounded">
+                    
+                    <div className='input ms-2'>
+                        <input onChange={(e)=>setmessage(e.target.value)} value={message} className='ps-2 pe-2 w-100' placeholder='Type a Message' type="text" />
+                    </div>
+                    <div onClick={sendedit} className="send-icon ms-3 me-3">
+                        <img  className='img-fluid' src={sendicon} alt="" />
+                    </div>
+                </div>
+        </div>
+            </div>}
         <div className="d-flex header-chat w-100 align-items-center">
             
                 <img height={'60px'} style={{borderRadius:'50%'}} src={profilephoto?`http://localhost:3000/profileimgs/${profilephoto}`:emptyprofile} alt="" className=" m-2" />
@@ -111,8 +192,18 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
                         <p className=' justify-content-end' style={{margin:'0',transitionDuration:'1s',fontSize:'10px',fontWeight:'900',display:`${msg.sender==user['_id']?'flex':'none'}`}}>{msg.notsent == true ?'. . .':msg.seen?<img  className='ms-auto img-fluid '  src={bluetick} alt="" />:msg.delivered?<img  className='ms-auto img-fluid '  src={deliverdtick} alt="" />:<img  className='ms-auto img-fluid '  src={singletick} alt="" />}</p>
                     </div>
                     ) :(id == msg.recipient || id == msg.sender) &&  <div key={index} className={`message ${msg.sender == user._id?'sender':'received'}`} >
-                        <p style={{marginBottom:'0'}}>{msg.content}</p>
-                        <p className=' justify-content-end' style={{margin:'0',transitionDuration:'1s',fontSize:'10px',fontWeight:'900',display:`${msg.sender==user['_id']?'flex':'none'}`}}>{msg.notsent == true ?'. . .':msg.seen?<img  className='ms-auto img-fluid '  src={bluetick} alt="" />:msg.delivered?<img  className='ms-auto img-fluid '  src={deliverdtick} alt="" />:<img  className='ms-auto img-fluid '  src={singletick} alt="" />}</p>
+                        {msg.sender == user._id && <div className="dropdown" onClick={e=>toogleDropDown(index)}><img src={dropdown} alt="" /></div>}
+                        {<div className='dropoptions' style={{maxHeight: `${dropdownindex == index?'100px':'0px'}`, overflow:'hidden',padding: dropdownindex === index ? '10px' : '0'}}>
+                            <p onClick={e=>updatemsg(msg)}>Edit </p>
+                            <p onClick={e => deletemsg(msg)}> Delete </p>
+                            </div>}
+ 
+                        <p className={msg.deleted? "deleted":undefined} style={{marginBottom:'0'}}>{msg.deleted && msg.sender == user._id?"You Deleted this Message":msg.content}</p>
+                        <div className='message-footer d-flex gap-2 justify-content-end'>
+                            {msg.edited && !msg.deleted && <p style={{fontSize:'10px',marginBottom:'0px',color:'rgba(255,255,255,0.7'}}>Edited</p>}
+                            {!msg.deleted && <p className=' align-items-center justify-content-end' style={{margin:'0',transitionDuration:'1s',fontSize:'10px',fontWeight:'900',display:`${msg.sender==user['_id']?'flex':'none'}`}}>{msg.notsent == true ?'. . .':msg.seen?<img  className='ms-auto img-fluid '  src={bluetick} alt="" />:msg.delivered?<img  className='ms-auto img-fluid '  src={deliverdtick} alt="" />:<img  className='ms-auto img-fluid '  src={singletick} alt="" />}</p>}
+                        </div>
+                       
                     </div>
                 })
             }

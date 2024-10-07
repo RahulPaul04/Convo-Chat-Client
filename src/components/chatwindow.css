@@ -58,6 +58,7 @@
     border-radius: 10px;
     color: white;
     margin-bottom: 20px;
+    position: relative;
 }
 
 .sender{
@@ -75,4 +76,52 @@
 .tick-mark{
     height: 15px;
     width: 20px;
+}
+
+.dropdown{
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    opacity: 0;
+    transition-duration: 0.25s;
+    cursor: pointer;
+    background-color: #176b5b;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+}
+
+.message:hover .dropdown{
+    opacity: 1;
+}
+
+.dropoptions{
+    position: absolute;
+    top: 25px;
+    right: 40px;
+    z-index: 2;
+    background-color: rgb(32 44 51);
+    padding: 15px;
+    border-radius: 5px;
+    transition-duration: 0.15s;
+}
+
+.dropoptions>p{
+    color: #e9edef;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.editwindow{
+    position: absolute;
+    height: 100dvh;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+.deleted{
+    color: rgba(255,255,255,0.5);
 }
