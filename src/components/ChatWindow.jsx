@@ -41,7 +41,8 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
                 recipient:id,
                 senderName:user.name,
                 recipientName:name,
-                notsent:true
+                notsent:true,
+                timestamp:new Date()
             }
             if(msg.sender == msg.recipient){
                 msg.delivered = true
@@ -56,7 +57,7 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
             console.log("array length",messageArray.length,hashset[msgid],hashset,"hashset here");
             setmessagehashs({...hashset})
             const sentmsg = {...msg}
-            delete sentmsg.notsent //Message will have key notsent as true until server ack is received but we don;t need to send this key to server
+            delete sentmsg.notsent //Message will have key notsent as true until server ack is received but we don't need to send this key to server
             socket.emit('message', sentmsg)
         }
     }
@@ -137,6 +138,44 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
         setmessageArray([...msgarr])
     }
 
+    const tolocaltime = (utctime) => {
+
+        let utcdate = new Date(utctime)
+        const localdatetime = utcdate.toLocaleString()
+        let lastseen =  localdatetime
+        let lstr = lastseen.split(' ')
+        let time = lstr[1].split(':')
+        let localtime = time[0] + ":"+time[1]
+        let fulldate = lstr[0] + " " +   " " + localtime + " "+ lstr[2]
+        return fulldate
+    }
+
+    const comparedate = (current,prev) => {
+        if (!current.timestamp && !prev){
+            return false
+        }
+        if (!current.timestamp){
+            return false
+        }
+        let currdate = new Date(current.timestamp)
+        const currlocaldatetime = currdate.toLocaleString()
+        if (!prev) {
+            return currdate
+        }
+        let prevdate = new Date(prev.timestamp)
+        const prevlocaldatetime = prevdate.toLocaleString()
+        currdate = currlocaldatetime.split(' ')[0]
+        prevdate = prevlocaldatetime.split(' ')[0]
+        console.log("checking date",prevdate,currdate);
+        if (currdate != prevdate){
+            
+            return currdate.split(',')[0]
+        }
+        else{
+            return false
+        }
+    }
+
   return (
     <div className='w-100 d-flex flex-column' style={{height:'100vh'}}>
         {editwindow && <div className='editwindow d-flex flex-column align-items-center justify-content-center'>
@@ -187,11 +226,16 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
                     }
                     console.log(id == user._id);
                     return(id == user._id)?(
+        
                         (msg.sender == msg.recipient) && <div key={index} className='message   sender'>
                         <p style={{marginBottom:'0'}}>{msg.content}</p>
                         <p className=' justify-content-end' style={{margin:'0',transitionDuration:'1s',fontSize:'10px',fontWeight:'900',display:`${msg.sender==user['_id']?'flex':'none'}`}}>{msg.notsent == true ?'. . .':msg.seen?<img  className='ms-auto img-fluid '  src={bluetick} alt="" />:msg.delivered?<img  className='ms-auto img-fluid '  src={deliverdtick} alt="" />:<img  className='ms-auto img-fluid '  src={singletick} alt="" />}</p>
                     </div>
-                    ) :(id == msg.recipient || id == msg.sender) &&  <div key={index} className={`message ${msg.sender == user._id?'sender':'received'}`} >
+                    ) :
+                    <div>
+                        {(msg.index == 0 || comparedate(msg,messageArray[index-1]))&&<div className='mx-auto d-flex justify-content-center ms-2 me-2'><p className='p-1' style={{color:'rgba(255,255,255,0.5)',backgroundColor:'#182229',borderRadius:'5px',width:'fit-Content'}}>{comparedate(msg,messageArray[index-1])}</p></div>}
+                    
+                    {(id == msg.recipient || id == msg.sender) &&  <div key={index} className={`message ${msg.sender == user._id?'sender':'received'}`} >
                         {msg.sender == user._id && <div className="dropdown" onClick={e=>toogleDropDown(index)}><img src={dropdown} alt="" /></div>}
                         {<div className='dropoptions' style={{maxHeight: `${dropdownindex == index?'100px':'0px'}`, overflow:'hidden',padding: dropdownindex === index ? '10px' : '0'}}>
                             <p onClick={e=>updatemsg(msg)}>Edit </p>
@@ -201,9 +245,11 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
                         <p className={msg.deleted? "deleted":undefined} style={{marginBottom:'0'}}>{msg.deleted && msg.sender == user._id?"You Deleted this Message":msg.content}</p>
                         <div className='message-footer d-flex gap-2 justify-content-end'>
                             {msg.edited && !msg.deleted && <p style={{fontSize:'10px',marginBottom:'0px',color:'rgba(255,255,255,0.7'}}>Edited</p>}
+                            {msg.timestamp && !msg.deleted && <p style={{fontSize:'10px',marginBottom:'0px',color:'rgba(255,255,255,0.7'}}>{tolocaltime(msg.timestamp)}</p>}
                             {!msg.deleted && <p className=' align-items-center justify-content-end' style={{margin:'0',transitionDuration:'1s',fontSize:'10px',fontWeight:'900',display:`${msg.sender==user['_id']?'flex':'none'}`}}>{msg.notsent == true ?'. . .':msg.seen?<img  className='ms-auto img-fluid '  src={bluetick} alt="" />:msg.delivered?<img  className='ms-auto img-fluid '  src={deliverdtick} alt="" />:<img  className='ms-auto img-fluid '  src={singletick} alt="" />}</p>}
                         </div>
                        
+                    </div>}
                     </div>
                 })
             }

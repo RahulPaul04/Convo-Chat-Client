@@ -206,6 +206,28 @@ function Chat() {
       setchatuserhash({...chatnameshash})
     })
 
+
+    socket.on('edit',(nmsg,msgid) => {
+      console.log("editing message",nmsg,msgid);
+      let hashset = {...msghashref.current}
+      let msgindex = hashset[msgid]
+      console.log(msgindex);
+      let messageArray = messagearrayref.current
+      messageArray[msgindex].content = nmsg
+      messageArray[msgindex].edited = true
+      setmessageArray([...messageArray])
+
+    })
+
+    socket.on('delete',(msgid) => {
+      let hashset = {...msghashref.current}
+      let msgindex = hashset[msgid]
+      let messageArray = messagearrayref.current
+      messageArray[msgindex].content = "This message has been deleted"
+      messageArray[msgindex].deleted = true
+      setmessageArray([...messageArray])
+    })
+
   }
 
   
