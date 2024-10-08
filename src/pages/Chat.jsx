@@ -32,8 +32,8 @@ function Chat() {
   const [profilephoto,setprofilephotot] = useState("")
 
   // For Dynamic Screen Size
-  const [ismobile,setismobile] = useState(window.innerWidth < 576)
-  const [ismedium,setismedium] = useState(window.innerWidth < 800)
+  const [ismobile,setismobile] = useState(window.innerWidth < 800)
+  // const [ismedium,setismedium] = useState(window.innerWidth < 800)
   const [sidepanel,setsidepanel] = useState(true)
 
   // Creating References to use States when mounting socket
@@ -336,6 +336,7 @@ function Chat() {
 
   const handlechange = (index)=>{
     setselectindex(index)
+    setsidepanel(false)
   }
 
   const searchuser = async () => {
@@ -398,8 +399,8 @@ function Chat() {
 
   useEffect(() => {
     const handleResize = () => {
-      setismedium(window.innerWidth < 800 && window.innerWidth >= 576)
-      setismobile(window.innerWidth < 576)
+      // setismedium(window.innerWidth < 800 && window.innerWidth >= 576)
+      setismobile(window.innerWidth < 800)
     }
 
     window.addEventListener('resize',handleResize)
@@ -426,11 +427,7 @@ function Chat() {
       <div
           className="names"
           style={
-            ismedium
-              ? (sidepanel
-                ? { width: '400px' }
-                : { width: '0px' })
-              :ismobile?
+            ismobile?
               (sidepanel
                 ?{width:'100%'}
                 :{width:'0px'})
@@ -439,11 +436,7 @@ function Chat() {
         >
           <div className="header-name d-flex align-items-center ps-2 pe-2 pt-1 pb-1 justify-content-between" 
           style={
-            ismedium
-              ? (sidepanel
-                ? { width: '400px' }
-                : { width: '0px' })
-              :ismobile?
+            ismobile?
               (sidepanel
                 ?{width:'100%'}
                 :{width:'0px'})
@@ -465,7 +458,7 @@ function Chat() {
             <input value={searchstring} onChange={(e)=>setsearchstring(e.target.value)} type="text" placeholder='Search' className='w-100 p-2'   />
           </div>
           <div className="chat-names" >
-          <div className="new-chat d-flex flex-column" style={{width:`${newchat?'100%':'0'}`}}>
+            <div className="new-chat d-flex flex-column" style={{width:`${newchat?'100%':'0'}`}}>
               <div onClick={newchatclose} className='ms-2 mt-2' style={{cursor:'pointer', display:`${newchat?'block':'none'}`}}>
                 <img src={backbutton} alt="" />
               </div>
@@ -490,7 +483,7 @@ function Chat() {
           </div>
       </div>
       <div className="chat">
-            {selectindex != null && <ChatWindow id={chatnames[selectindex]._id} name={chatnames[selectindex].name} socket={socket} messageArray={messageArray} setmessageArray={setmessageArray} messagehashs={messagehashs} setmessagehashs={setmessagehashs} chatuserstatus={chatuserstatus} setchatuserstatus={setchatuserstatus} profilephoto={chatnames[selectindex].profilephoto}/>}
+            {selectindex != null && <ChatWindow id={chatnames[selectindex]._id} name={chatnames[selectindex].name} socket={socket} messageArray={messageArray} setmessageArray={setmessageArray} messagehashs={messagehashs} setmessagehashs={setmessagehashs} chatuserstatus={chatuserstatus} setchatuserstatus={setchatuserstatus} profilephoto={chatnames[selectindex].profilephoto} setsidepanel={setsidepanel} ismobile={ismobile}/>}
       </div>
 
     </div>

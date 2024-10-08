@@ -8,8 +8,9 @@ import singletick from '../images/singletick.png'
 import bluetick from '../images/New Text Document (2).png'
 import dropdown from '../images/Dropdown.png'
 import cancel from '../images/cancel (1).png'
+import hamburgericon from '../images/burger-menu-svgrepo-com.png'
 
-function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, setmessagehashs, chatuserstatus,setchatuserstatus,profilephoto}) {
+function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, setmessagehashs, chatuserstatus,setchatuserstatus,profilephoto,setsidepanel,ismobile}) {
 
     console.log("name in chatwondow",name);
     const [message,setmessage] = useState("")
@@ -179,7 +180,7 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
   return (
     <div className='w-100 d-flex flex-column' style={{height:'100vh'}}>
         {editwindow && <div className='editwindow d-flex flex-column align-items-center justify-content-center'>
-        <div className='w-50'style={{backgroundImage:'background-image: url( "https://wallpapercave.com/wp/wp6988787.png")'}} >
+        <div className='w-100 w-md-50'style={{backgroundImage:'background-image: url( "https://wallpapercave.com/wp/wp6988787.png")'}} >
                 <div onClick={canceledit} className='canceledit mb-4' style={{marginLeft:'auto',marginRight:'20px',width: 'fit-content',cursor:'pointer'}}>
                     <img src={cancel} alt="" />
                 </div>
@@ -201,19 +202,24 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
                 </div>
         </div>
             </div>}
-        <div className="d-flex header-chat w-100 align-items-center">
+        <div className="d-flex header-chat w-100 align-items-center justify-content-between" >
             
-                <img height={'60px'} style={{borderRadius:'50%'}} src={profilephoto?`http://localhost:3000/profileimgs/${profilephoto}`:emptyprofile} alt="" className=" m-2" />
-                <div className='d-flex flex-column align-items-center'>
-                    <div className='name2'> 
-                    
-                            {name}
+                <div className='d-flex align-items-center'>
+                    <img height={'60px'} style={{borderRadius:'50%'}} src={profilephoto?`http://localhost:3000/profileimgs/${profilephoto}`:emptyprofile} alt="" className=" m-2" />
+                    <div className='d-flex flex-column align-items-center'>
+                        <div className='name2'> 
                         
-                    </div>
-                    <div className="status" style={{color:'rgba(233,237,239,0.5)',fontSize:'14px',paddingLeft:'10px'}}>
-                        {chatuserstatus[id]}
+                                {name}
+                            
+                        </div>
+                        <div className="status" style={{color:'rgba(233,237,239,0.5)',fontSize:'14px',paddingLeft:'10px'}}>
+                            {chatuserstatus[id]}
+                        </div>
                     </div>
                 </div>
+                {ismobile && <div className="backbutton me-2" style={{cursor:'pointer'}} onClick={(e) => setsidepanel(true)}>
+                    <img className='img-fluid' style={{width:'30px'}} src={hamburgericon} alt="" />
+                </div>}
             
            
         </div>
