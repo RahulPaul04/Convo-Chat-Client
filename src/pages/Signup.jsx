@@ -16,6 +16,7 @@ import Alert from '@mui/material/Alert';
 import emptyprofile from '../images/emptyprofile.png'
 import Cropper from 'react-easy-crop'
 import tickimg from '../images/checkmark.png'
+import SERVER_URL from '../server_url';
 
 
 
@@ -156,7 +157,7 @@ function Signup() {
         }
 
         try{
-            await axios.post('http://localhost:3000/register', formData, {
+            await axios.post(`${SERVER_URL}/register`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
                 },

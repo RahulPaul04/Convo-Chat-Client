@@ -9,6 +9,7 @@ import newchatimg from '../images/newchat.png'
 import emptyprofile from '../images/emptyprofile.png'
 import backbutton from '../images/backbutton.png'
 import closeicon from '../images/close.png'
+import SERVER_URL from '../server_url'
 
 function Chat() {
 
@@ -71,6 +72,14 @@ function Chat() {
       fetchUserData(user,token)
       
     }
+
+    return () => {
+      if (socket) {
+        socket.disconnect();
+        console.log("Socket disconnected");
+      }
+    }
+
 
   },[])
 
@@ -287,7 +296,7 @@ function Chat() {
   const fetchUserData = async (user,token) => {
     try{
       let userdata = JSON.parse(user)
-      const response = await axios.get(`http://localhost:3000/chat/${userdata._id}`,{
+      const response = await axios.get(`${SERVER_URL}/chat/${userdata._id}`,{
         headers:{
           'Authorization':`Bearer ${token}`
         }
@@ -296,7 +305,7 @@ function Chat() {
       // setcurrentnames(response.data.chatusers)  
       setmessageArray(response.data.messagearray)
 
-      const socket = io('http://localhost:3000',{
+      const socket = io(`${SERVER_URL}`,{
         query:
         {
           userId:userdata._id,
@@ -343,7 +352,7 @@ function Chat() {
     
     try {
       console.log(newchatstring);
-      const response = await axios.get(`http://localhost:3000/search/${newchatstring}`)
+      const response = await axios.get(`${SERVER_URL}/search/${newchatstring}`)
       const user = response.data.user
       console.log(!(user._id in chatuserhash),"is it true");
       if(user && !(user._id in chatuserhash)){
@@ -443,7 +452,7 @@ function Chat() {
               : { width: '400px' }
           }>
               <div className="profile-photo" style={{height:'100%'}}>
-                <img className='img-fluid ' style={{height:'90%',borderRadius:'50%'}} src={profilephoto?`http://localhost:3000/profileimgs/${profilephoto}`:emptyprofile} alt="" />
+                <img className='img-fluid ' style={{height:'90%',borderRadius:'50%'}} src={profilephoto?`${SERVER_URL}/profileimgs/${profilephoto}`:emptyprofile} alt="" />
               </div>
               <div className="actions d-flex justify-content-end gap-2" >
                   <div style={{cursor:'pointer'}} className="new-chat-toggle" onClick={(e) => setnewchat(true)}>

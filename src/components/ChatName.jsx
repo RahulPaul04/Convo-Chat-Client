@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './chatname.css'
 import profileimg from '../images/emptyprofile.png'
+import SERVER_URL from '../server_url'
 
 function ChatName({name,slen,index,selected,onclick,profilephoto}) {
 
@@ -13,7 +14,7 @@ function ChatName({name,slen,index,selected,onclick,profilephoto}) {
     <div  style={{backgroundColor:`${selected?'rgb(42 57 66) ':hovered?'#202c33':'rgba(0,0,0,0)'}`}} onClick={()=>onclick(index)} className='name-container d-flex'
     onMouseEnter={() => sethovered(true)}
     onMouseLeave={() => sethovered(false)}>
-        <img className='img-fluid col-2 p-1' style={{borderRadius:'50%'}} src={profilephoto?`http://localhost:3000/profileimgs/${profilephoto}`:profileimg} alt="" />
+        <img className='img-fluid col-2 p-1' style={{borderRadius:'50%'}} src={profilephoto?`${SERVER_URL}/profileimgs/${profilephoto}`:profileimg} alt="" />
         <p className='name col-10 d-flex align-items-center'>
             {
                 chatname.split('').map((word,index)=>{

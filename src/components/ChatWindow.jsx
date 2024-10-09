@@ -9,6 +9,7 @@ import bluetick from '../images/New Text Document (2).png'
 import dropdown from '../images/Dropdown.png'
 import cancel from '../images/cancel (1).png'
 import hamburgericon from '../images/burger-menu-svgrepo-com.png'
+import SERVER_URL from '../server_url'
 
 function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, setmessagehashs, chatuserstatus,setchatuserstatus,profilephoto,setsidepanel,ismobile}) {
 
@@ -205,7 +206,7 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
         <div className="d-flex header-chat w-100 align-items-center justify-content-between" >
             
                 <div className='d-flex align-items-center'>
-                    <img height={'60px'} style={{borderRadius:'50%'}} src={profilephoto?`http://localhost:3000/profileimgs/${profilephoto}`:emptyprofile} alt="" className=" m-2" />
+                    <img height={'60px'} style={{borderRadius:'50%'}} src={profilephoto?`${SERVER_URL}/profileimgs/${profilephoto}`:emptyprofile} alt="" className=" m-2" />
                     <div className='d-flex flex-column align-items-center'>
                         <div className='name2'> 
                         

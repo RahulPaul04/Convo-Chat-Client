@@ -10,6 +10,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import logo from '../images/logo.png'
+import SERVER_URL from '../server_url';
 
 
 
@@ -78,7 +79,7 @@ function Login() {
 
         try{
             console.log("before requesr");
-            const res = await axios.post('http://localhost:3000/login',loginData)
+            const res = await axios.post(`${SERVER_URL}/login`,loginData)
             console.log("here after response");
             console.log("response",res);
             const {currentuser,token} = res.data
