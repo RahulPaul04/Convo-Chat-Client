@@ -179,7 +179,7 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
     }
 
   return (
-    <div className='w-100 d-flex flex-column' style={{height:'100vh'}}>
+    <div className='w-100 d-flex flex-column' style={{height:'100dvh'}}>
         {editwindow && <div className='editwindow d-flex flex-column align-items-center justify-content-center'>
         <div className='w-100 w-md-50'style={{backgroundImage:'background-image: url( "https://wallpapercave.com/wp/wp6988787.png")'}} >
                 <div onClick={canceledit} className='canceledit mb-4' style={{marginLeft:'auto',marginRight:'20px',width: 'fit-content',cursor:'pointer'}}>
