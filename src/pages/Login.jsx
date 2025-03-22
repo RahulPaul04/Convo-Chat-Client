@@ -78,7 +78,6 @@ function Login() {
         }
 
         try{
-            console.log("before requesr");
             const res = await axios.post(`${SERVER_URL}/login`,loginData)
             console.log("here after response");
             console.log("response",res);

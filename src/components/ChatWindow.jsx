@@ -162,7 +162,7 @@ function ChatWindow({id,name,socket,messageArray,setmessageArray,messagehashs, s
         let currdate = new Date(current.timestamp)
         const currlocaldatetime = currdate.toLocaleString()
         if (!prev) {
-            return currdate
+            return currlocaldatetime
         }
         let prevdate = new Date(prev.timestamp)
         const prevlocaldatetime = prevdate.toLocaleString()
